@@ -9,9 +9,6 @@ namespace FolderIcons
     [InitializeOnLoad]
     internal static class FolderIconsReplacer
         {
-        // Initialize
-        private readonly static bool isValid;
-
         // References
         private static Object[] allFolderIcons;
         private static FolderIconSettings folderIcons;
@@ -24,8 +21,6 @@ namespace FolderIcons
         static FolderIconsReplacer()
             {
             CheckPreferences ();
-
-            isValid = ValidateFiles ();
                
             EditorApplication.projectWindowItemOnGUI -= ReplaceFolders;
             EditorApplication.projectWindowItemOnGUI += ReplaceFolders;
@@ -43,7 +38,7 @@ namespace FolderIcons
                     folderIcons = allFolderIcons[0] as FolderIconSettings;
                 }
 
-            if (!isValid || folderIcons == null)
+            if (folderIcons == null)
                 return;
 
             if (!folderIcons.showCustomFolder && !folderIcons.showOverlay)
@@ -107,25 +102,6 @@ namespace FolderIcons
 
             showFolder = EditorPrefs.GetBool (prefFolder);
             showOverlay = EditorPrefs.GetBool (prefIcon);
-            }
-
-        //TODO: Remove this validation. Kind of silly, kind of useless.
-        private static bool ValidateFiles()
-            {
-            string folderTexturePath = FolderIconConstants.FOLDER_TEXTURE_PATH;
-            string iconTexturePath = FolderIconConstants.ICONS_TEXTURE_PATH;
-
-            bool isValid = FindOrCreateFolder (folderTexturePath, "Folders");
-
-            if (!isValid)
-                Debug.LogWarning ("FolderPlus could not create texture folder at " + folderTexturePath);
-
-            isValid &= FindOrCreateFolder (iconTexturePath, "Icons");
-
-            if (!isValid)
-                Debug.LogWarning ("FolderPlus could not create texture folder at " + iconTexturePath);
-
-            return isValid;
             }
 
         private static bool FindOrCreateFolder(string path, string folderCreateName)
