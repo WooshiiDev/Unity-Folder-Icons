@@ -125,7 +125,16 @@ namespace FolderIcons
             DrawTexturePreview ();
 
             EditorGUI.BeginDisabledGroup (previewTexture == null);
+                {
+                EditorGUI.BeginChangeCheck ();
+                    {
+                    replacementColour = EditorGUILayout.ColorField (new GUIContent ("Replacement Colour"), replacementColour);
+                    }
+                if (EditorGUI.EndChangeCheck ())
+                    SetPreviewColour ();
+
                 DrawTextureSaving ();
+                }
             EditorGUI.EndDisabledGroup ();
             }
 
@@ -263,11 +272,6 @@ namespace FolderIcons
         private void DrawTexturePreview()
             {
             EditorGUILayout.LabelField ("Texture Colour Replacement", EditorStyles.boldLabel);
-
-            EditorGUI.BeginChangeCheck ();
-            replacementColour = EditorGUILayout.ColorField (new GUIContent ("Replacement Colour"), replacementColour);
-            if (EditorGUI.EndChangeCheck ())
-                SetPreviewColour ();
 
             // Draw selection
             EditorGUI.BeginChangeCheck ();
