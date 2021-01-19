@@ -1,0 +1,14 @@
+{
+  "name": "com.wooshii.foldericons",
+  "displayName": "Folder Icons",
+  "version": "0.1.2",
+  "unity": "2019.3",
+  "description": "Folder Icons add custom folder textures and overlays to the Project Window",
+  "keywords": [
+    "project",
+    "editor",
+    "utility",
+  ],
+  "category": "Editor",
+  "dependencies": {}
+}
