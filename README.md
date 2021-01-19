@@ -31,7 +31,17 @@ Note: This is not an attempt to replicate Rainbow Folders. This purely began as 
 
 ## Installation
 
+<p align="center">
+  <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases">Releases</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases/download/0.1/FolderIcons.unitypackage">Unity Package</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/archive/0.1.zip">Zip</a> <br>
 It's as simple as plug and play just by adding it to your project!
+</p>
+
+
+
+FolderIcons can also be installed directly through the git url
+```
+https://github.com/WooshiiDev/Unity-Folder-Icons.git
+```
 
 ## Features
 
