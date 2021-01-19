@@ -1,0 +1,369 @@
+﻿using UnityEngine;
+using UnityEditor;
+using UnityEditorInternal;
+using System.IO;
+
+namespace FolderIcons
+    {
+    [CustomEditor (typeof (FolderIconSettings))]
+    internal class FolderIconSettingsEditor : Editor
+        {
+        // References
+        private FolderIconSettings settings;
+        private SerializedProperty serializedIcons;
+
+        // Settings
+        private bool showCustomFolders;
+        private bool showCustomOverlay;
+
+        private ReorderableList iconList;
+        private GUIStyle propertyStyle;
+
+        // Texture Maker
+        private Texture2D selectedTexture = null;
+        private Texture2D previewTexture = null;
+        private Color replacementColour = Color.gray;
+        private Color[] previewColours;
+        private GUIContent previewContent = new GUIContent();
+
+        private RenderTexture previewRender;
+
+        // Texture Save Settings
+        private string textureName = "New Texture";
+        private string savePath;
+
+        private int heightIndex;
+
+        // Sizing 
+        private const float MAX_LABEL_WIDTH = 90f;
+        private const float MAX_FIELD_WIDTH = 140f;
+
+        private const float PROPERTY_HEIGHT = 19f;
+        private const float PROPERTY_PADDING = 2F;
+        private const float SETTINGS_PADDING = 1F;
+
+        // Styling
+        private GUIStyle previewStyle;
+
+        private void OnEnable()
+            {
+            settings = target as FolderIconSettings;
+            serializedIcons = serializedObject.FindProperty ("icons");
+
+            showCustomFolders = settings.showCustomFolder;
+            showCustomOverlay = settings.showOverlay;
+
+            if (iconList == null)
+                iconList = new ReorderableList (serializedObject, serializedIcons)
+                    {
+                    drawHeaderCallback = OnHeaderDraw,
+                    drawElementCallback = OnElementDraw,
+                    elementHeightCallback = GetPropertyHeight,
+                    };
+
+            savePath = Application.dataPath;
+
+            if (selectedTexture != null)
+                UpdatePreview ();
+            }
+
+        private void OnDisable()
+            {
+            ClearPreviewData ();
+            }
+
+        public override void OnInspectorGUI()
+            {
+            //Create styles
+            if (previewStyle == null)
+                {
+                previewStyle = new GUIStyle (EditorStyles.label)
+                    {
+                    fixedHeight = 64,
+                    //fixedWidth = 64,
+                    //stretchWidth = false,
+                    alignment = TextAnchor.MiddleCenter
+                    };
+                }
+
+            // Draw Settings
+            EditorGUILayout.LabelField ("Settings", EditorStyles.boldLabel);
+
+            EditorGUI.BeginChangeCheck ();
+                {
+                showCustomFolders = EditorGUILayout.ToggleLeft ("Show Folder Textures", showCustomFolders);
+                showCustomOverlay = EditorGUILayout.ToggleLeft ("Show Overlay Textures", showCustomOverlay);
+                }
+            if (EditorGUI.EndChangeCheck ())
+                {
+                ApplySettings ();
+                }
+
+            EditorGUILayout.Space (16f);
+
+            EditorGUI.BeginChangeCheck ();
+                iconList.DoLayoutList ();
+            if (EditorGUI.EndChangeCheck ())
+                serializedObject.ApplyModifiedProperties ();
+           
+            DrawTexturePreview ();
+
+            EditorGUI.BeginDisabledGroup (previewTexture == null);
+                DrawTextureSaving ();
+            EditorGUI.EndDisabledGroup ();
+            }
+
+        private void ApplySettings()
+            {
+            FolderIconsReplacer.showFolder = settings.showCustomFolder = showCustomFolders;
+            FolderIconsReplacer.showOverlay = settings.showOverlay = showCustomOverlay;
+            }
+
+        #region Reorderable Array Draw
+
+        private void OnHeaderDraw(Rect rect)
+            {
+            EditorGUI.LabelField (rect, "Folder Icons", EditorStyles.boldLabel);
+            }
+
+        private void OnElementDraw(Rect rect, int index, bool isActive, bool isFocused)
+            {
+            Rect originalRect = rect;
+
+            // Set sizes for correct draw
+            float originalLabelWidth = EditorGUIUtility.labelWidth;
+
+            float rectWidth = MAX_LABEL_WIDTH + MAX_FIELD_WIDTH;
+            EditorGUIUtility.labelWidth = MAX_LABEL_WIDTH;
+            rect.width = rectWidth;
+
+            //Draw property and settings in a line
+            SerializedProperty property = serializedIcons.GetArrayElementAtIndex (index);
+            DrawPropertyNoDepth (rect, property);
+
+            // ==========================
+            //     Draw Icon Example
+            // ==========================
+            rect.x += rect.width;
+            rect.width = originalRect.width - rect.width;
+
+            // References
+            SerializedProperty folderTexture = property.FindPropertyRelative ("folderIcon");
+            SerializedProperty overlayTexture = property.FindPropertyRelative ("overlayIcon");
+            SerializedProperty overlayOffset = property.FindPropertyRelative ("overlayOffset");
+
+            // Object checks
+            Object folderObject = folderTexture.objectReferenceValue;
+            Object overlayObject = overlayTexture.objectReferenceValue;
+
+            // Draw preview
+            if (folderObject != null)
+                GUI.DrawTexture (rect, folderObject as Texture, ScaleMode.ScaleToFit);
+
+            Rect overlayRect = new Rect (rect.position + overlayOffset.vector2Value, new Vector2 (rect.width, rect.height));
+
+            if (overlayTexture != null)
+                GUI.DrawTexture(overlayRect, overlayObject as Texture, ScaleMode.ScaleToFit);
+
+            // Revert width modification
+            EditorGUIUtility.labelWidth = originalLabelWidth;
+            }
+
+        private float GetPropertyHeight(SerializedProperty property)
+            {
+            if (heightIndex == 0)
+                heightIndex = property.CountInProperty ();
+
+             return (PROPERTY_HEIGHT + PROPERTY_PADDING)*heightIndex;
+            }
+
+        private float GetPropertyHeight(int index)
+            {
+            return GetPropertyHeight (serializedIcons.GetArrayElementAtIndex (index));
+            }
+
+        private void DrawPropertyNoDepth(Rect rect, SerializedProperty property)
+            {
+            rect.height = PROPERTY_HEIGHT;
+
+            SerializedProperty copy = property.Copy ();
+            bool enterChildren = true;
+
+            while(copy.Next(enterChildren))
+                {
+                if (SerializedProperty.EqualContents (copy, property.GetEndProperty ()))
+                    break;
+
+                EditorGUI.PropertyField (rect, copy, false);
+                rect.y += PROPERTY_HEIGHT + PROPERTY_PADDING;
+
+                enterChildren = false;
+                }
+            }
+
+        private int GetPropertyCount(SerializedProperty property)
+            {
+            return property.CountInProperty ()-1;
+            }
+
+        #endregion
+
+        #region Texture Preview/Creation
+
+        private void DrawTexturePreview()
+            {
+            EditorGUILayout.LabelField ("Texture Colour Replacement", EditorStyles.boldLabel);
+
+            EditorGUI.BeginChangeCheck ();
+            replacementColour = EditorGUILayout.ColorField (new GUIContent ("Replacement Colour"), replacementColour);
+            if (EditorGUI.EndChangeCheck ())
+                SetPreviewColour ();
+
+            // Draw selection
+            EditorGUI.BeginChangeCheck ();
+                {
+                EditorGUILayout.BeginHorizontal ();
+                    EditorGUILayout.LabelField ("Original Texture");
+                    EditorGUILayout.LabelField ("Modified Texture");
+                EditorGUILayout.EndHorizontal ();
+
+                EditorGUILayout.BeginHorizontal ();
+                    {
+                    selectedTexture = EditorGUILayout.ObjectField ( selectedTexture, typeof (Texture2D),
+                        false, GUILayout.ExpandWidth(false),  GUILayout.ExpandHeight(true), GUILayout.Width(64f)) as Texture2D;
+
+                    EditorGUILayout.LabelField (previewContent, previewStyle, GUILayout.Height(64));
+                    }
+                EditorGUILayout.EndHorizontal ();
+                }
+            if (EditorGUI.EndChangeCheck ())
+                {
+                if (selectedTexture == null)
+                    {
+                    ClearPreviewData ();
+                    previewTexture = null;
+                    return;
+                    }
+
+                UpdatePreview ();
+                }
+
+                
+            EditorGUILayout.Space ();
+            }
+
+        private void DrawTextureSaving()
+            {
+            EditorGUILayout.LabelField ("Save Created Texture", EditorStyles.boldLabel);
+
+            GUILayout.BeginHorizontal ();
+                {
+                textureName = EditorGUILayout.TextField ("Texture Name", textureName);
+
+                EditorGUI.BeginDisabledGroup (true);
+                GUILayout.TextField (".png", GUILayout.Width(40f));
+                EditorGUI.EndDisabledGroup ();
+                }
+            GUILayout.EndHorizontal ();
+
+            GUILayout.BeginHorizontal ();
+                {
+                savePath = EditorGUILayout.TextField ("Save Path", savePath);
+
+                if (GUILayout.Button ("Select", GUILayout.MaxWidth(80f)))
+                    {
+                    savePath = EditorUtility.OpenFolderPanel ("Texture Save Path", "Assets", "");
+                    GUIUtility.ExitGUI ();
+                    }
+
+                }
+            GUILayout.EndHorizontal ();
+
+            if (GUILayout.Button ("Save Texture"))
+                {
+                string fullPath = $"{savePath}/{textureName}.png";
+
+                //Split path to make unity happy
+                //int localPathIndex = fullPath.IndexOf ("Assets");
+                //fullPath = fullPath.Substring (localPathIndex, fullPath.Length - localPathIndex);
+
+                SaveTextureAsPNG (previewTexture, fullPath);
+
+                }
+            }
+
+        private void SetPreviewColour()
+            {
+            for (int x = 0; x < previewTexture.width; x++)
+                {
+                for (int y = 0; y < previewTexture.height; y++)
+                    {
+                    Color oldCol = previewTexture.GetPixel (x, y);
+                    Color newCol = replacementColour;
+                    newCol.a = oldCol.a;
+
+                    previewTexture.SetPixel (x, y, newCol);
+                    }
+                }
+
+            previewTexture.Apply ();
+            }
+
+        private void SaveTextureAsPNG(Texture2D texture, string path)
+            {
+            byte[] bytes = texture.EncodeToPNG ();
+            File.WriteAllBytes (path, bytes);
+
+            AssetDatabase.Refresh ();
+
+            int localPathIndex = path.IndexOf ("Assets");
+            path = path.Substring (localPathIndex, path.Length - localPathIndex);
+
+            TextureImporter importer = AssetImporter.GetAtPath (path) as TextureImporter;
+
+            importer.textureType = TextureImporterType.GUI;
+            importer.isReadable = true;
+
+            AssetDatabase.ImportAsset (path);
+            AssetDatabase.Refresh ();
+
+            //Texture2D textureAsset = AssetDatabase.LoadAssetAtPath<Texture2D> (path);
+            //textureAsset.alphaIsTransparency = true;
+            //textureAsset.Apply ();
+            }
+
+        private void ClearPreviewData()
+            {
+            if (previewRender != null)
+                previewRender.Release ();
+            }
+
+        private void UpdatePreview()
+            {
+            ClearPreviewData ();
+
+            //No real point having a huge texture so limit the size for efficency sake
+            int width = Mathf.Min (256, selectedTexture.width);
+            int height = Mathf.Min (256, selectedTexture.height);
+
+            //Create a new render texture and preview
+            previewRender = new RenderTexture (width, height, 16);
+            previewTexture = new Texture2D (previewRender.width, previewRender.height)
+                {
+                alphaIsTransparency = true
+                };
+            previewContent.image = previewTexture;
+
+            Graphics.Blit (selectedTexture, previewRender);
+
+            // Get pixels from current render texture and apply
+            previewTexture.ReadPixels (new Rect (0, 0, previewRender.width, previewRender.height), 0, 0);
+            SetPreviewColour ();
+
+            }
+
+        #endregion
+
+
+        }
+    }
