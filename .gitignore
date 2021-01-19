@@ -1,7 +1,8 @@
-# This .gitignore file should be placed at the root of your Unity project directory
-#
-# Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
-#
+# Ignore scene files as they're not required
+*.unity
+*.unity.meta
+
+# The usual stuff
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

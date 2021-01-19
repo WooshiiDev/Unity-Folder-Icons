@@ -183,14 +183,7 @@ namespace FolderIcons
             Object folderObject = folderTexture.objectReferenceValue;
             Object overlayObject = overlayTexture.objectReferenceValue;
 
-            // Draw preview
-            if (folderObject != null && showCustomFolders)
-                GUI.DrawTexture (rect, folderObject as Texture, ScaleMode.ScaleToFit);
-
-            Rect overlayRect = new Rect (rect.position, new Vector2 (rect.width, rect.height));
-
-            if (overlayObject != null && showCustomOverlay)
-                GUI.DrawTexture(overlayRect, overlayObject as Texture, ScaleMode.ScaleToFit);
+            FolderIconGUI.DrawFolderPreview (rect, folderObject as Texture, overlayObject as Texture);
 
             // Revert width modification
             EditorGUIUtility.labelWidth = originalLabelWidth;

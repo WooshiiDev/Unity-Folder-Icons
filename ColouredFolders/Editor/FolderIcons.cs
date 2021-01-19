@@ -19,10 +19,6 @@ namespace FolderIcons
         public static bool showFolder;
         public static bool showOverlay;
 
-        private static Color BackgroundColour = EditorGUIUtility.isProSkin
-           ? new Color32 (51, 51, 51, 255)
-           : new Color32 (190, 190, 190, 255);
-
         private static readonly Color selectedColor = new Color (60f/255f, 92f/255f, 148f/255f);
 
         static FolderIconsReplacer()
@@ -63,7 +59,7 @@ namespace FolderIcons
                 {
                 var icon = folderIcons.icons[i];
 
-                if (icon.folder == null)
+                if (icon.folder != folderAsset)
                     continue;
 
                 DrawTextures (selectionRect, icon, folderAsset, guid);
@@ -72,53 +68,28 @@ namespace FolderIcons
 
         private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon, Object folderAsset, string guid)
             {
-            if (icon.folder == folderAsset)
+            bool isTreeView = rect.width > rect.height;
+            bool isSideView = FolderIconGUI.IsSideView (rect);
+
+            // Vertical Folder View
+            if (isTreeView)
                 {
-                if (showFolder && icon.folderIcon)
-                    {
-                    bool isSmall = rect.width > rect.height;
-                    bool isTreeSide = rect.x == 44;
+                rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
 
-                    float xScale = rect.width / FolderIconConstants.MAX_PROJECT_WIDTH;
-                    float yScale = rect.height / FolderIconConstants.MAX_PROJECT_HEIGHT;
-
-                    if (isSmall)
-                        {
-                        rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
-
-                        if (!isTreeSide)
-                            rect.x += 3f;
-                        }
-                    else
-                        {
-                        rect.height -= 14f;
-                        }
-
-                    if (icon.folderIcon && showFolder)
-                        {
-                        Color rectCol = Selection.assetGUIDs.Contains (guid)
-                            ? selectedColor
-                            : BackgroundColour;
-
-                        Texture2D folderIcon = icon.folderIcon;
-
-                        EditorGUI.DrawRect (rect, rectCol);
-                        GUI.DrawTexture (rect, folderIcon, ScaleMode.ScaleAndCrop);
-                        }
-                    }
-
-                if (icon.overlayIcon && showOverlay)
-                    {
-                    rect.width *= 0.5f;
-                    rect.height *= 0.5f;
-
-                    rect.x += rect.width * 0.5f;
-                    rect.y += rect.height * 0.5f;
-
-                    Texture2D overlayIcon = icon.overlayIcon;
-                    GUI.DrawTexture (rect, overlayIcon);
-                    }
+                //Add small offset for correct placement
+                if (!isSideView)
+                    rect.x += 3f;
                 }
+            else
+                {
+                rect.height -= 14f;
+                }
+
+            if (showFolder && icon.folderIcon)
+                FolderIconGUI.DrawFolderTexture (rect, icon.folderIcon, guid);
+
+            if (showOverlay && icon.overlayIcon)
+                FolderIconGUI.DrawOverlayTexture (rect, icon.overlayIcon);
             }
 
         #region Initialize 
@@ -185,5 +156,8 @@ namespace FolderIcons
             }
 
         #endregion
+
         }
+
+
     }

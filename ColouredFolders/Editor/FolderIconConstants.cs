@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace FolderIcons
     {
@@ -25,5 +26,8 @@ namespace FolderIcons
 
         // Colours
         public static readonly Color SelectedColor = new Color (0.235f, 0.360f, 0.580f);
+        public static Color BackgroundColour = EditorGUIUtility.isProSkin
+          ? new Color32 (51, 51, 51, 255)
+          : new Color32 (190, 190, 190, 255);
         }
     }
