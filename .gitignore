@@ -1,6 +1,10 @@
-# Ignore scene files as they're not required
+# Ignore scene/asset files as they're not required
+# Package will include the correct files out of the bat, but these are needed
+# to handle unity package importing correctly
 *.unity
 *.unity.meta
+*.asset
+*.asset.meta
 
 # The usual stuff
 /[Ll]ibrary/
