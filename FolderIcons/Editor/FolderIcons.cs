@@ -28,14 +28,22 @@ namespace FolderIcons
 
         private static void ReplaceFolders(string guid, Rect selectionRect)
             {
-            // Does the folder asset exist at all?
-            if (allFolderIcons == null)
-                allFolderIcons = GetAllInstances<FolderIconSettings> ();
-
             if (folderIcons == null)
                 {
+                allFolderIcons = GetAllInstances<FolderIconSettings> ();
+
                 if (allFolderIcons.Length > 0)
                     folderIcons = allFolderIcons[0] as FolderIconSettings;
+                else
+                    {
+                    FolderIconSettings settings = ScriptableObject.CreateInstance<FolderIconSettings> ();
+                    AssetDatabase.CreateAsset (settings, "Assets/FolderIcons.asset");
+
+                    AssetDatabase.SaveAssets ();
+                    AssetDatabase.Refresh ();
+
+                    folderIcons = AssetDatabase.LoadAssetAtPath ("Assets/FolderIcons.asset", typeof (FolderIconSettings)) as FolderIconSettings;
+                    }
                 }
 
             if (folderIcons == null)

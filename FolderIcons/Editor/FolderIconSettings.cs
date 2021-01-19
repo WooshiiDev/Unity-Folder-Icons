@@ -21,6 +21,6 @@ namespace FolderIcons
         public bool showOverlay = true;
         public bool showCustomFolder = true;
 
-        public FolderIcon[] icons;
+        public FolderIcon[] icons = new FolderIcon[0];
         }
     }
