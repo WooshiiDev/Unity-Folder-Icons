@@ -30,18 +30,24 @@ namespace FolderIcons
             CheckPreferences ();
 
             isValid = ValidateFiles ();
-
-            if (isValid)
-                folderIcons = allFolderIcons[0] as FolderIconSettings;
-
+               
             EditorApplication.projectWindowItemOnGUI -= ReplaceFolders;
             EditorApplication.projectWindowItemOnGUI += ReplaceFolders;
-
             }
 
         private static void ReplaceFolders(string guid, Rect selectionRect)
             {
-            if (!isValid)
+            // Does the folder asset exist at all?
+            if (allFolderIcons == null)
+                allFolderIcons = GetAllInstances<FolderIconSettings> ();
+
+            if (folderIcons == null)
+                {
+                if (allFolderIcons.Length > 0)
+                    folderIcons = allFolderIcons[0] as FolderIconSettings;
+                }
+
+            if (!isValid || folderIcons == null)
                 return;
 
             if (!folderIcons.showCustomFolder && !folderIcons.showOverlay)
@@ -132,6 +138,7 @@ namespace FolderIcons
             showOverlay = EditorPrefs.GetBool (prefIcon);
             }
 
+        //TODO: Remove this validation. Kind of silly, kind of useless.
         private static bool ValidateFiles()
             {
             string folderTexturePath = FolderIconConstants.FOLDER_TEXTURE_PATH;
@@ -146,17 +153,6 @@ namespace FolderIcons
 
             if (!isValid)
                 Debug.LogWarning ("FolderPlus could not create texture folder at " + iconTexturePath);
-
-            // Does the folder asset exist at all?
-            allFolderIcons = GetAllInstances<FolderIconSettings> ();
-            
-            isValid &= allFolderIcons.Length > 0;
-
-            if (!isValid)
-                {
-                Debug.LogWarning ("Cannot find FolderPlus Settings Asset");
-                Debug.LogError ("FolderPlus is missing some assets or folders. Please check the Console for more info.");
-                }
 
             return isValid;
             }

@@ -48,6 +48,9 @@ namespace FolderIcons
 
         private void OnEnable()
             {
+            if (target == null)
+                return;
+
             settings = target as FolderIconSettings;
             serializedIcons = serializedObject.FindProperty ("icons");
 
@@ -231,6 +234,7 @@ namespace FolderIcons
             Handles.EndGUI ();
             }
 
+
         // ========================
         //
         // ========================
@@ -244,7 +248,11 @@ namespace FolderIcons
             if (heightIndex == 0)
                 heightIndex = property.CountInProperty ();
 
-            return (PROPERTY_HEIGHT + PROPERTY_PADDING) * (heightIndex-1) + PROPERTY_PADDING;
+            // return (PROPERTY_HEIGHT + PROPERTY_PADDING) * (heightIndex-1) + PROPERTY_PADDING;
+
+            //Property count returning wrong, so just supplying 3 for now
+            //TODO: Investigate GetPropertyCount and find issue with invalid value 
+            return (PROPERTY_HEIGHT + PROPERTY_PADDING) * (3) + PROPERTY_PADDING;
             }
 
         private float GetPropertyHeight(int index)
