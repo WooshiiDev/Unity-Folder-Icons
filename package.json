@@ -10,5 +10,12 @@
     "utility"
   ],
   "category": "Editor",
-  "dependencies": {}
+  "dependencies": {},
+  "samples": [
+    {
+      "displayName": "Folder Textures",
+      "description": "Provided coloured folder textures",
+      "path": "FolderIcons/Folders"
+    }
+  ]
 }
