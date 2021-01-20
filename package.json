@@ -15,7 +15,7 @@
     {
       "displayName": "Folder Textures",
       "description": "Provided coloured folder textures",
-      "path": "FolderIcons/Folders"
+      "path": "Samples~/Folders"
     }
   ]
 }
