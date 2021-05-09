@@ -27,8 +27,6 @@ A small extension for unity adding custom folder textures and overlay icons. Thi
 
 Some of the code does need refined/seperated (more so for future additions), and there are many, many features I'd like to personally add and see improved when I work on this.
 
-Note: This is not an attempt to replicate Rainbow Folders. This purely began as an internal team addition just for convenience and I thought of sharing it after some time. I'd also recommend their original version [HERE](https://github.com/PhannGor/unity3d-rainbow-folders/) or their newer paid one [HERE](https://assetstore.unity.com/packages/tools/utilities/rainbow-folders-2-143526).
-
 ## Installation
 
 <p align="center">
