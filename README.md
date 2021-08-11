@@ -27,13 +27,10 @@ A small extension for unity adding custom folder textures and overlay icons. Thi
 
 Some of the code does need refined/seperated (more so for future additions), and there are many, many features I'd like to personally add and see improved when I work on this.
 
-Note: This is not an attempt to replicate Rainbow Folders. This purely began as an internal team addition just for convenience and I thought of sharing it after some time. I'd also recommend their original version [HERE](https://github.com/PhannGor/unity3d-rainbow-folders/) or their newer paid one [HERE](https://assetstore.unity.com/packages/tools/utilities/rainbow-folders-2-143526).
-
 ## Installation
 
 <p align="center">
-  <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases">Releases</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases/download/0.1.2/Folder.Icons.v0.1.2.unitypackage">Unity Package</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/archive/0.1.2.zip">Zip</a> <br>
-It's as simple as plug and play just by adding it to your project!
+  <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases">Releases</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/releases/download/0.1.2/Folder.Icons.v0.1.2.unitypackage">Unity Package</a> • <a href="https://github.com/WooshiiDev/Unity-Folder-Icons/archive/0.1.2.zip">Zip</a>
 </p>
 
 
@@ -42,6 +39,14 @@ FolderIcons can also be installed directly through the git url
 ```
 https://github.com/WooshiiDev/Unity-Folder-Icons.git
 ```
+
+**Note:**<br>
+If installed through git, to access the premade folder textures, there will be an import sample button in the package manager.
+<br>After imported, the textures will have their alpha transparency off and will need to be turned on manually. <br>A fix for this will be applied soon.
+
+<p align="center">
+ <img src="https://i.imgur.com/r71gO0i.png">
+</p>
 
 ## Features
 
