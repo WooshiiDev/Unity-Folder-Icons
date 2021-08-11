@@ -8,13 +8,10 @@ namespace FolderIcons
     {
         // References
         private static Object[] allFolderIcons;
-
         private static FolderIconSettings folderIcons;
 
         public static bool showFolder;
         public static bool showOverlay;
-
-        private static readonly Color selectedColor = new Color (60f / 255f, 92f / 255f, 148f / 255f);
 
         static FolderIconsReplacer()
         {
