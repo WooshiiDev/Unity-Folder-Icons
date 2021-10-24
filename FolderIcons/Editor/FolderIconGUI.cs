@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 
 namespace FolderIcons
@@ -77,7 +77,11 @@ namespace FolderIcons
         /// <param name="rect">Current rect</param>
         public static bool IsSideView(Rect rect)
         {
-            return rect.x == 44;
+#if UNITY_2019_3_OR_NEWER
+            return rect.x != 14;
+#else
+            return rect.x != 13;
+#endif
         }
 
         /// <summary>
