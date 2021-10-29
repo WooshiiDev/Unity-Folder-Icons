@@ -76,7 +76,7 @@ namespace FolderIcons
         /// </summary>
         /// <param name="rect">Original rect of the folder</param>
         /// <param name="overlay">Overlay Texture</param>
-        public static void DrawOverlayTexture(Rect rect, Texture overlay)
+        public static void DrawOverlayTexture(Rect rect, Texture overlay, string guid)
         {
             if (overlay == null || !FolderIconsReplacer.GetFolderIconSettings().showOverlay)
                 return;
@@ -84,7 +84,14 @@ namespace FolderIcons
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
 
-            GUI.DrawTexture(rect, overlay);
+            if (Selection.assetGUIDs.Contains(guid))
+            {
+                GUI.DrawTexture(rect, overlay, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+            }
+            else
+            {
+                GUI.DrawTexture(rect, overlay);
+            }
         }
 
         /// <summary>

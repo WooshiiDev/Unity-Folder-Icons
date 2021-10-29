@@ -124,7 +124,7 @@ namespace FolderIcons
                 FolderIconGUI.DrawFolderTexture(folderRect, guid, icon);
 
             if (showOverlay && icon.overlayIcon)
-                FolderIconGUI.DrawOverlayTexture(folderRect, icon.overlayIcon);
+                FolderIconGUI.DrawOverlayTexture(folderRect, icon.overlayIcon, guid);
         }
 
         #region Initialize 
