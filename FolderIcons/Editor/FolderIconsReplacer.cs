@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -11,10 +12,11 @@ namespace FolderIcons
     {
         // References
         private static Object[] allFolderIcons;
-        private static FolderIconSettings folderIcons;
+        public static FolderIconSettings folderIcons;
 
         public static bool showFolder;
         public static bool showOverlay;
+        private static bool selectionChanged;
 
         private static readonly Color selectedColor = new Color(60f / 255f, 92f / 255f, 148f / 255f);
 
@@ -24,6 +26,12 @@ namespace FolderIcons
 
             EditorApplication.projectWindowItemOnGUI -= ReplaceFolders;
             EditorApplication.projectWindowItemOnGUI += ReplaceFolders;
+            Selection.selectionChanged += OnSelectionChanged;
+        }
+
+        private static void OnSelectionChanged()
+        {
+            selectionChanged = true;
         }
 
         private static void ReplaceFolders(string guid, Rect selectionRect)
@@ -59,6 +67,32 @@ namespace FolderIcons
 
                 DrawTextures(selectionRect, icon, folderAsset, guid);
             }
+
+            if (selectionChanged && IsFolderSelected(out List<DefaultAsset> selectedFolders) && Event.current.alt)
+            {
+                FolderIconSettingsWindow.ShowWindow(selectedFolders);
+            }
+
+            selectionChanged = false;
+        }
+
+        private static bool IsFolderSelected(out List<DefaultAsset> selectedFolders)
+        {
+            selectedFolders = new List<DefaultAsset>();
+            foreach (var id in Selection.instanceIDs)
+            {
+                var path = "Assets";
+                path = AssetDatabase.GetAssetPath(id);
+                if (path.Length > 0)
+                {
+                    if (Directory.Exists(path) && path != "Assets")
+                    {
+                        var folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(path);
+                        selectedFolders.Add(folderAsset);
+                    }
+                }
+            }
+            return selectedFolders.Count == 1;
         }
 
         private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon, Object folderAsset, string guid)

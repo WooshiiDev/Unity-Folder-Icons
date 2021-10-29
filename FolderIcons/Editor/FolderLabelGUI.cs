@@ -138,7 +138,7 @@ namespace FolderIcons
             return gradTex;
         }
 
-        private static bool IsSideFolder(Rect rect, string guid, out float indent)
+        public static bool IsSideFolder(Rect rect, string guid, out float indent)
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
             string[] splits = assetPath.TrimStart(Application.dataPath.ToCharArray()).Split('/').Skip(1).ToArray();
