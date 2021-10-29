@@ -1,6 +1,6 @@
 <h1 align="center">  
  <br>
- <img src="https://i.imgur.com/sNNdxbt.png">
+ <img src="https://i.imgur.com/Kv1RAw1.png">
   Unity-Folder-Icons
 </h1>
 
@@ -66,9 +66,17 @@ You can add and remove folders from the list displayed at the top of the setting
 Generally, you don't want folders to be noisey or overly messy. Directories need to be clean and appealing to look at. 
 <br><br>
 The texture creator, will take in a texture, and apply a custom colour to all visible pixels in respect to the alpha. These textures can then be saved and used for folders or icons. 
-
+  
 <p align="center">
  <img src="https://i.imgur.com/G1Jn4Jg.png" alt="Texture Creator">
+</p>
+
+### Custom Label Colors and Selection Color
+  
+You can have custom color for every label on every Folder. You can also choose a selection gradient for every folder or, if you like you can have a global Selection Gradient.
+  
+<p align="center">
+ <img src="https://i.imgur.com/MlMy0zK.png" alt="Custom Labels">
 </p>
 
 ## Support
