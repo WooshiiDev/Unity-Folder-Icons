@@ -18,7 +18,6 @@ namespace FolderIcons
 
         //Global Settings
         public bool showOverlay = true;
-
         public bool showCustomFolder = true;
 
         public FolderIcon[] icons = new FolderIcon[0];

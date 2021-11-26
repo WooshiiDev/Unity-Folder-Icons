@@ -82,7 +82,7 @@ namespace FolderIcons
 
             if (showFolder && icon.folderIcon)
             {
-                FolderIconGUI.DrawFolderTexture (rect, icon.folderIcon, guid);
+                FolderIconGUI.DrawFolderTexture (rect, icon.folderIcon);
             }
 
             if (showOverlay && icon.overlayIcon)
@@ -90,8 +90,6 @@ namespace FolderIcons
                 FolderIconGUI.DrawOverlayTexture (rect, icon.overlayIcon);
             }
         }
-
-        #region Initialize
 
         private static FolderIconSettings GetOrCreateSettings()
         {
@@ -114,7 +112,5 @@ namespace FolderIcons
 
             return settings;
         }
-
-        #endregion Initialize
     }
 }

@@ -4,23 +4,42 @@ using UnityEngine;
 namespace FolderIcons
 {
     /// <summary>
-    /// Contains all constant data, values and colours FolderIcon requires
+    /// Contains all constant data and settings required.
     /// </summary>
     internal static class FolderIconConstants
     {
         // Settings
+
+        /// <summary>
+        /// The default path for creating <see cref="FolderIconSettings"/>.
+        /// </summary>
         public const string ASSET_DEFAULT_PATH = "Assets/";
 
+        /// <summary>
+        /// The EditorPref Key for saving the last known GUID of a <see cref="FolderIconSettings"/> instance.
+        /// </summary>
         public const string PREF_GUID = "FP_GUID";
+
+        /// <summary>
+        /// The EditorPref Key for showing custom folder textures.
+        /// </summary>
         public const string PREF_FOLDER = "FP_SHOW_FOLDERS";
+
+        /// <summary>
+        /// The EditorPref Key for showing custom folder icons.
+        /// </summary>
         public const string PREF_OVERLAY = "FP_SHOW_ICONS";
 
         // GUI
 
-        public const float MAX_TREE_WIDTH = 118f;
-        public const float MAX_PROJECT_WIDTH = 96f;
-
+        /// <summary>
+        /// The maximum height of a texture in the project treeview.
+        /// </summary>
         public const float MAX_TREE_HEIGHT = 16f;
+
+        /// <summary>
+        /// The maximum height of a texture in the standard project view.
+        /// </summary>
         public const float MAX_PROJECT_HEIGHT = 110f;
 
         // Colours

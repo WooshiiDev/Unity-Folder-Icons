@@ -9,12 +9,12 @@ namespace FolderIcons
     internal static class AssetUtility
     {
         /// <summary>
-        /// Load an asset with a given GUID
+        /// Load an asset with a given GUID.
         /// </summary>
-        /// <typeparam name="T">The asset type</typeparam>
-        /// <param name="GUID">The GUID of the asset</param>
-        /// <returns>Returns the loaded asset</returns>
-        internal static T LoadAssetFromGUID<T>(string GUID) where T : Object
+        /// <typeparam name="T">The asset type.</typeparam>
+        /// <param name="GUID">The GUID of the asset.</param>
+        /// <returns>Returns the loaded asset.</returns>
+        public static T LoadAssetFromGUID<T>(string GUID) where T : Object
         {
             if (string.IsNullOrEmpty(GUID))
             {
@@ -32,13 +32,13 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Create a scriptable at a path
+        /// Create a Scriptable at a given path.
         /// </summary>
         /// <typeparam name="T">The Scriptable type</typeparam>
-        /// <param name="name">The name of the created scriptable</param>
-        /// <param name="path">The path of the created scriptable</param>
-        /// <returns>Returns the created Scriptable</returns>
-        internal static T CreateScriptableAtPath<T>(string name, string path) where T : ScriptableObject
+        /// <param name="name">The name of the created Scriptable.</param>
+        /// <param name="path">The path of the created Scriptable.</param>
+        /// <returns>Returns the created Scriptable.</returns>
+        public static T CreateScriptableAtPath<T>(string name, string path) where T : ScriptableObject
         {
             if (string.IsNullOrEmpty (name))
             {
@@ -67,15 +67,15 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Find a scriptable type or create one at a given path and name
+        /// Find a Scriptable type or create one at a given path and name.
         /// </summary>
-        /// <typeparam name="T">The Scriptable type</typeparam>
-        /// <param name="type">The type string unity uses to search</param>
-        /// <param name="path">The path to create the Scriptable at</param>
-        /// <param name="name">The name of the created Scriptable</param>
-        /// <param name="onCreate">Callback when creating the scriptable</param>
-        /// <returns>Returns the created Scriptable</returns>
-        internal static T FindOrCreateScriptable<T>(string type, string name, string path, Action<T> onCreate = null) where T : ScriptableObject
+        /// <typeparam name="T">The Scriptable type.</typeparam>
+        /// <param name="type">The type string used to search for assets.</param>
+        /// <param name="path">The path where to create a new Scriptable.</param>
+        /// <param name="name">The name of the created Scriptable.</param>
+        /// <param name="onCreate">Callback when creating the Scriptable.</param>
+        /// <returns>Returns the created Scriptable.</returns>
+        public static T FindOrCreateScriptable<T>(string type, string name, string path, Action<T> onCreate = null) where T : ScriptableObject
         {
             T scriptable = null;
 
@@ -111,10 +111,10 @@ namespace FolderIcons
         /// <summary>
         /// Attempt to find an asset with the given GUID.
         /// </summary>
-        /// <param name="guid">The guid of the asset to find</param>
+        /// <param name="guid">The GUID of the asset to find</param>
         /// <param name="path">The path of the asset if found. Will return null if no asset is found.</param>
         /// <returns>Returns a boolean based on if an asset is found.</returns>
-        internal static bool TryGetAsset(string guid, out string path)
+        public static bool TryGetAsset(string guid, out string path)
         {
             if (string.IsNullOrEmpty(guid))
             {

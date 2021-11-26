@@ -9,11 +9,11 @@ namespace FolderIcons
     public static class FolderIconGUI
     {
         /// <summary>
-        /// Draw the folder preview
+        /// Draw the folder preview.
         /// </summary>
-        /// <param name="rect">Rect to draw preview</param>
-        /// <param name="folder">The folder texture</param>
-        /// <param name="overlay">The overlay texture</param>
+        /// <param name="rect">Rect to draw preview.</param>
+        /// <param name="folder">The folder texture.</param>
+        /// <param name="overlay">The overlay texture.</param>
         public static void DrawFolderPreview(Rect rect, Texture folder, Texture overlay)
         {
             if (folder == null && overlay == null)
@@ -37,12 +37,11 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Draw the folder texture and background rect if required
+        /// Draw the folder texture.
         /// </summary>
-        /// <param name="rect">Folder rect</param>
-        /// <param name="folder">Folder texture</param>
-        /// <param name="guid">The guid of the project fodler</param>
-        public static void DrawFolderTexture(Rect rect, Texture folder, string guid)
+        /// <param name="rect">The rect for the folder texture.</param>
+        /// <param name="folder">The texture to draw.</param>
+        public static void DrawFolderTexture(Rect rect, Texture folder)
         {
             if (folder == null)
             {
@@ -54,10 +53,10 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Draw the folder overlay texture, given the folder rect
+        /// Draw the folder overlay texture, given the folder rect.
         /// </summary>
-        /// <param name="rect">Original rect of the folder</param>
-        /// <param name="overlay">Overlay Texture</param>
+        /// <param name="rect">The original rect of the folder.</param>
+        /// <param name="overlay">The overlay texture to draw.</param>
         public static void DrawOverlayTexture(Rect rect, Texture overlay)
         {
             if (overlay == null)
@@ -72,9 +71,9 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Check if the current rect is the side view of folders
+        /// Check if the given rect is part of the project sidevew.
         /// </summary>
-        /// <param name="rect">Current rect</param>
+        /// <param name="rect">The rect to check.</param>
         public static bool IsSideView(Rect rect)
         {
 #if UNITY_2019_3_OR_NEWER
@@ -85,9 +84,9 @@ namespace FolderIcons
         }
 
         /// <summary>
-        /// Check if the current rect is in tree view
+        /// Check if the given rect is in a project treeview.
         /// </summary>
-        /// <param name="rect">Current rect</param>
+        /// <param name="rect">The rect to check.</param>
         public static bool IsTreeView(Rect rect)
         {
             return rect.width > rect.height;
