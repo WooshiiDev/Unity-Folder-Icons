@@ -6,6 +6,9 @@ namespace FolderIcons
     [InitializeOnLoad]
     internal static class FolderIconsReplacer
     {
+        private const string SETTINGS_TYPE_STRING = "FolderIconSettings";
+        private const string SETTINGS_NAME_STRING = "Folder Icons";
+
         // References
         private static Object[] allFolderIcons;
         private static FolderIconSettings folderIcons;
@@ -15,36 +18,19 @@ namespace FolderIcons
 
         static FolderIconsReplacer()
         {
-            CheckPreferences ();
+            // Find scriptable instance or create one
+            folderIcons = GetOrCreateSettings ();
 
-            EditorApplication.projectWindowItemOnGUI -= ReplaceFolders;
-            EditorApplication.projectWindowItemOnGUI += ReplaceFolders;
+            // Setup callback
+            EditorApplication.projectWindowItemOnGUI -= OnFolderGUI;
+            EditorApplication.projectWindowItemOnGUI += OnFolderGUI;
         }
 
-        private static void ReplaceFolders(string guid, Rect selectionRect)
+        private static void OnFolderGUI(string guid, Rect selectionRect)
         {
             if (folderIcons == null)
             {
-                allFolderIcons = GetAllInstances<FolderIconSettings> ();
-
-                if (allFolderIcons.Length > 0)
-                {
-                    folderIcons = allFolderIcons[0] as FolderIconSettings;
-                }
-                else
-                {
-                    FolderIconSettings settings = ScriptableObject.CreateInstance<FolderIconSettings> ();
-                    AssetDatabase.CreateAsset (settings, "Assets/FolderIcons.asset");
-
-                    AssetDatabase.SaveAssets ();
-                    AssetDatabase.Refresh ();
-
-                    folderIcons = AssetDatabase.LoadAssetAtPath ("Assets/FolderIcons.asset", typeof (FolderIconSettings)) as FolderIconSettings;
-                }
-            }
-
-            if (folderIcons == null)
-            {
+                folderIcons = GetOrCreateSettings ();
                 return;
             }
 
@@ -53,8 +39,7 @@ namespace FolderIcons
                 return;
             }
 
-            string path = AssetDatabase.GUIDToAssetPath (guid);
-            Object folderAsset = AssetDatabase.LoadAssetAtPath (path, typeof (DefaultAsset));
+            DefaultAsset folderAsset = AssetUtility.LoadAssetFromGUID<DefaultAsset> (guid);
 
             if (folderAsset == null)
             {
@@ -108,50 +93,26 @@ namespace FolderIcons
 
         #region Initialize
 
-        private static void CheckPreferences()
+        private static FolderIconSettings GetOrCreateSettings()
         {
-            string prefFolder = FolderIconConstants.FOLDER_TEXTURE_PATH;
-            string prefIcon = FolderIconConstants.ICONS_TEXTURE_PATH;
+            string path = null;
 
-            if (!EditorPrefs.HasKey (prefFolder))
+            // Make sure the key is still valid - no assuming that settings just 'exist'
+            string guidPref = FolderIconConstants.PREF_GUID;
+            if (EditorPrefs.HasKey (guidPref))
             {
-                EditorPrefs.SetBool (prefFolder, true);
+                if (AssetUtility.TryGetAsset(EditorPrefs.GetString (guidPref), out path))
+                {
+                    return AssetDatabase.LoadAssetAtPath<FolderIconSettings> (path);
+                }
             }
 
-            if (!EditorPrefs.HasKey (prefIcon))
-            {
-                EditorPrefs.SetBool (prefIcon, true);
-            }
+            FolderIconSettings settings = AssetUtility.FindOrCreateScriptable<FolderIconSettings> (SETTINGS_TYPE_STRING, SETTINGS_NAME_STRING, FolderIconConstants.ASSET_DEFAULT_PATH);
 
-            showFolder = EditorPrefs.GetBool (prefFolder);
-            showOverlay = EditorPrefs.GetBool (prefIcon);
-        }
+            path = AssetDatabase.GetAssetPath (settings);
+            EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
 
-        private static bool FindOrCreateFolder(string path, string folderCreateName)
-        {
-            if (AssetDatabase.IsValidFolder (path))
-            {
-                return true;
-            }
-
-            string parentFolder = path.Substring (0, path.LastIndexOf ('/'));
-            return AssetDatabase.CreateFolder (parentFolder, folderCreateName) != "";
-        }
-
-        private static T[] GetAllInstances<T>() where T : Object
-        {
-            string[] guids = AssetDatabase.FindAssets ("t:" + typeof (T).Name);
-
-            T[] instances = new T[guids.Length];
-
-            //probably could get optimized
-            for (int i = 0; i < guids.Length; i++)
-            {
-                string path = AssetDatabase.GUIDToAssetPath (guids[i]);
-                instances[i] = AssetDatabase.LoadAssetAtPath<T> (path);
-            }
-
-            return instances;
+            return settings;
         }
 
         #endregion Initialize
