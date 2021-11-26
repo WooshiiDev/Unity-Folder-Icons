@@ -4,7 +4,7 @@ using UnityEngine;
 namespace FolderIcons
 {
     [InitializeOnLoad]
-    internal static class FolderIconsReplacer
+    internal static class FolderIcons
     {
         private const string SETTINGS_TYPE_STRING = "FolderIconSettings";
         private const string SETTINGS_NAME_STRING = "Folder Icons";
@@ -13,10 +13,7 @@ namespace FolderIcons
         private static Object[] allFolderIcons;
         private static FolderIconSettings folderIcons;
 
-        public static bool showFolder;
-        public static bool showOverlay;
-
-        static FolderIconsReplacer()
+        static FolderIcons()
         {
             // Find scriptable instance or create one
             folderIcons = GetOrCreateSettings ();
@@ -61,31 +58,14 @@ namespace FolderIcons
 
         private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon, Object folderAsset, string guid)
         {
-            bool isTreeView = rect.width > rect.height;
-            bool isSideView = FolderIconGUI.IsSideView (rect);
+            rect = CalculateTextureRect(rect);
 
-            // Vertical Folder View
-            if (isTreeView)
-            {
-                rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
-
-                //Add small offset for correct placement
-                if (!isSideView)
-                {
-                    rect.x += 3f;
-                }
-            }
-            else
-            {
-                rect.height -= 14f;
-            }
-
-            if (showFolder && icon.folderIcon)
+            if (folderIcons.showCustomFolder && icon.folderIcon)
             {
                 FolderIconGUI.DrawFolderTexture (rect, icon.folderIcon);
             }
 
-            if (showOverlay && icon.overlayIcon)
+            if (folderIcons.showOverlay && icon.overlayIcon)
             {
                 FolderIconGUI.DrawOverlayTexture (rect, icon.overlayIcon);
             }
@@ -111,6 +91,30 @@ namespace FolderIcons
             EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
 
             return settings;
+        }
+
+        private static Rect CalculateTextureRect(Rect rect)
+        {
+            bool isTreeView = rect.width > rect.height;
+            bool isSideView = FolderIconGUI.IsSideView (rect);
+
+            // Vertical Folder View
+            if (isTreeView)
+            {
+                rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
+
+                //Add small offset for correct placement
+                if (!isSideView)
+                {
+                    rect.x += 3f;
+                }
+            }
+            else
+            {
+                rect.height -= 14f;
+            }
+
+            return rect;
         }
     }
 }

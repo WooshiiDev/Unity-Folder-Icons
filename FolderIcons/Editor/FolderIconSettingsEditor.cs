@@ -148,8 +148,10 @@ namespace FolderIcons
 
         private void ApplySettings()
         {
-            FolderIconsReplacer.showFolder = settings.showCustomFolder = showCustomFolders;
-            FolderIconsReplacer.showOverlay = settings.showOverlay = showCustomOverlay;
+            settings.showCustomFolder = showCustomFolders;
+            settings.showOverlay = showCustomOverlay;
+
+            EditorApplication.RepaintProjectWindow ();
         }
 
         #region Reorderable Array Draw

@@ -25,13 +25,13 @@ namespace FolderIcons
             {
                 GUI.DrawTexture (rect, folder, ScaleMode.ScaleToFit);
             }
-
-            //Half size of overlay, and reposition to center
-            rect.size *= 0.5f;
-            rect.position += rect.size * 0.5f;
-
+       
             if (overlay != null)
-            {
+            {     
+                //Half size of overlay, and reposition to center
+                rect.size *= 0.5f;
+                rect.position += rect.size * 0.5f;
+
                 GUI.DrawTexture (rect, overlay, ScaleMode.ScaleToFit);
             }
         }
