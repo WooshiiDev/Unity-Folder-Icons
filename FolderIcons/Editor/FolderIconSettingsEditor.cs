@@ -184,7 +184,48 @@ namespace FolderIcons
             rect.width = Mathf.Min (rect.width, rectWidth);
 
             //Draw property and settings in a line
+
+            EditorGUI.BeginChangeCheck ();
+
             DrawPropertyNoDepth (rect, property);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                SerializedProperty folderProp = property.FindPropertyRelative ("folder");
+
+                if (folderProp.objectReferenceValue != null)
+                {
+                    SerializedProperty guidProp = property.FindPropertyRelative ("guid");
+
+                    string oldGUID = guidProp.stringValue;
+                    string newGUID = AssetUtility.GetGUIDFromAsset (folderProp.objectReferenceValue);
+
+                    if (oldGUID != newGUID)
+                    {
+                        if (!settings.iconMap.ContainsKey (newGUID))
+                        {
+                            guidProp.stringValue = newGUID;
+
+                            if (!string.IsNullOrEmpty (oldGUID))
+                            {
+                                settings.UpdateGUIDMap (oldGUID, newGUID);
+                            }
+                            else
+                            {
+                                settings.iconMap.Add (newGUID, settings.icons[index]);
+                            }
+                        }
+                        else
+                        {
+                            guidProp.stringValue = null;
+                            settings.iconMap.Remove (oldGUID);
+                        }
+
+                        EditorApplication.RepaintProjectWindow ();
+                    }
+                }
+            }
+
 
             // ==========================
             //     Draw Icon Example
@@ -195,7 +236,6 @@ namespace FolderIcons
             // References
             SerializedProperty folderTexture = property.FindPropertyRelative ("folderIcon");
             SerializedProperty overlayTexture = property.FindPropertyRelative ("overlayIcon");
-            SerializedProperty overlayOffset = property.FindPropertyRelative ("overlayOffset");
 
             // Object checks
             Object folderObject = folderTexture.objectReferenceValue;
@@ -222,7 +262,7 @@ namespace FolderIcons
             SerializedProperty copy = property.Copy ();
             bool enterChildren = true;
 
-            while (copy.Next (enterChildren))
+            while (copy.NextVisible (enterChildren))
             {
                 if (SerializedProperty.EqualContents (copy, property.GetEndProperty ()))
                 {

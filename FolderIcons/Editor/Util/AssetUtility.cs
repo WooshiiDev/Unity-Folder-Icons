@@ -125,5 +125,16 @@ namespace FolderIcons
             path = AssetDatabase.GUIDToAssetPath (guid);
             return AssetDatabase.GetMainAssetTypeAtPath (path) != null;
         }
+
+        public static string GetGUIDFromAsset(Object asset)
+        {
+            if (asset == null)
+            {
+                return null;
+            }
+
+            string path = AssetDatabase.GetAssetPath (asset);
+            return AssetDatabase.AssetPathToGUID (path);
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace FolderIcons
         {
             // Find scriptable instance or create one
             folderIcons = GetOrCreateSettings ();
+            folderIcons?.OnInitalize ();
 
             // Setup callback
             EditorApplication.projectWindowItemOnGUI -= OnFolderGUI;
@@ -28,6 +29,8 @@ namespace FolderIcons
             if (folderIcons == null)
             {
                 folderIcons = GetOrCreateSettings ();
+                folderIcons.OnInitalize ();
+
                 return;
             }
 
@@ -43,20 +46,13 @@ namespace FolderIcons
                 return;
             }
 
-            for (int i = 0; i < folderIcons.icons.Length; i++)
+            if (folderIcons.iconMap.TryGetValue(guid, out FolderIconSettings.FolderIcon folder))
             {
-                FolderIconSettings.FolderIcon icon = folderIcons.icons[i];
-
-                if (icon.folder != folderAsset)
-                {
-                    continue;
-                }
-
-                DrawTextures (selectionRect, icon, folderAsset, guid);
+                DrawTextures (selectionRect, folder);
             }
         }
 
-        private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon, Object folderAsset, string guid)
+        private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon)
         {
             rect = CalculateTextureRect(rect);
 
