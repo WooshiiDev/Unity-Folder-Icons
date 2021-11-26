@@ -1,9 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 using UnityEditor;
-using System.Linq;
-using System.Reflection;
-using System;
-using System.IO;
+using UnityEngine;
 
 namespace FolderIcons
 {
@@ -21,17 +18,23 @@ namespace FolderIcons
         public static void DrawFolderPreview(Rect rect, Texture folder, Texture overlay)
         {
             if (folder == null && overlay == null)
+            {
                 return;
+            }
 
             if (folder != null)
-                GUI.DrawTexture(rect, folder, ScaleMode.ScaleToFit);
+            {
+                GUI.DrawTexture (rect, folder, ScaleMode.ScaleToFit);
+            }
 
             //Half size of overlay, and reposition to center
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
 
             if (overlay != null)
-                GUI.DrawTexture(rect, overlay, ScaleMode.ScaleToFit);
+            {
+                GUI.DrawTexture (rect, overlay, ScaleMode.ScaleToFit);
+            }
         }
 
         /// <summary>
@@ -43,30 +46,32 @@ namespace FolderIcons
         public static void DrawFolderTexture(Rect rect, string guid, FolderIconSettings.FolderIcon iconSettings)
         {
             if (iconSettings.folderIcon == null)
-                return;
-
-            if (Selection.assetGUIDs.Contains(guid))
             {
-                if (FolderIconsReplacer.GetFolderIconSettings().showCustomFolder)
+                return;
+            }
+
+            if (Selection.assetGUIDs.Contains (guid))
+            {
+                if (FolderIconsReplacer.GetFolderIconSettings ().showCustomFolder)
                 {
-                    GUI.DrawTexture(rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+                    GUI.DrawTexture (rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
                 }
                 else
                 {
-                    Texture2D defaultTexture = Resources.Load("Folders/Folder_Default") as Texture2D;
-                    GUI.DrawTexture(rect, defaultTexture, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+                    Texture2D defaultTexture = Resources.Load ("Folders/Folder_Default") as Texture2D;
+                    GUI.DrawTexture (rect, defaultTexture, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
                 }
             }
             else
             {
-                if (FolderIconsReplacer.GetFolderIconSettings().showCustomFolder)
+                if (FolderIconsReplacer.GetFolderIconSettings ().showCustomFolder)
                 {
-                    GUI.DrawTexture(rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop);
+                    GUI.DrawTexture (rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop);
                 }
                 else
                 {
-                    Texture2D defaultTexture = Resources.Load("Folders/Folder_Default") as Texture2D;
-                    GUI.DrawTexture(rect, defaultTexture, ScaleMode.ScaleAndCrop);
+                    Texture2D defaultTexture = Resources.Load ("Folders/Folder_Default") as Texture2D;
+                    GUI.DrawTexture (rect, defaultTexture, ScaleMode.ScaleAndCrop);
                 }
             }
         }
@@ -78,19 +83,21 @@ namespace FolderIcons
         /// <param name="overlay">Overlay Texture</param>
         public static void DrawOverlayTexture(Rect rect, Texture overlay, string guid)
         {
-            if (overlay == null || !FolderIconsReplacer.GetFolderIconSettings().showOverlay)
+            if (overlay == null || !FolderIconsReplacer.GetFolderIconSettings ().showOverlay)
+            {
                 return;
+            }
 
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
 
-            if (Selection.assetGUIDs.Contains(guid))
+            if (Selection.assetGUIDs.Contains (guid))
             {
-                GUI.DrawTexture(rect, overlay, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+                GUI.DrawTexture (rect, overlay, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
             }
             else
             {
-                GUI.DrawTexture(rect, overlay);
+                GUI.DrawTexture (rect, overlay);
             }
         }
 

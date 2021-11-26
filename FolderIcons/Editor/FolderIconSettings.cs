@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace FolderIcons
 {
-    [CreateAssetMenu(fileName = "Folder Icon Manager", menuName = "Scriptables/Others/Folder Manager")]
+    [CreateAssetMenu (fileName = "Folder Icon Manager", menuName = "Scriptables/Others/Folder Manager")]
     public class FolderIconSettings : ScriptableObject
     {
         [Serializable]
@@ -21,9 +20,10 @@ namespace FolderIcons
 
         //Global Settings
         public bool showOverlay = true;
+
         public bool showCustomFolder = true;
         public bool useGlobalSelectionColor = true;
-        public Gradient globalSelectionGradient = new Gradient();
+        public Gradient globalSelectionGradient = new Gradient ();
 
         public FolderIcon[] icons;
     }

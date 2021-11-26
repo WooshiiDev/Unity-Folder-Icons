@@ -26,13 +26,14 @@ namespace FolderIcons
 
         // Colours
         // public static readonly Color SelectedColor = new Color(0.537f, 0.772f, 0.942f, );
-        public static readonly Color SelectedColor = new Color(0.7f, 0.7f, 0.7f, 0.9f);
+        public static readonly Color SelectedColor = new Color (0.7f, 0.7f, 0.7f, 0.9f);
+
         public static Color BackgroundColour = EditorGUIUtility.isProSkin
-          ? new Color32(51, 51, 51, 255)
-          : new Color32(190, 190, 190, 255);
+          ? new Color32 (51, 51, 51, 255)
+          : new Color32 (190, 190, 190, 255);
 
         public static Color TreeViewBackgroundColour = EditorGUIUtility.isProSkin
-          ? new Color32(55, 55, 55, 255)
-          : new Color32(194, 194, 194, 255);
+          ? new Color32 (55, 55, 55, 255)
+          : new Color32 (194, 194, 194, 255);
     }
 }

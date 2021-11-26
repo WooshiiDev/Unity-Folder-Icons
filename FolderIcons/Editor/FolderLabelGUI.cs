@@ -1,6 +1,6 @@
-using UnityEngine;
-using UnityEditor;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace FolderIcons
 {
@@ -9,13 +9,13 @@ namespace FolderIcons
         public static void DrawLabel(Rect rect, string guid, FolderIconSettings.FolderIcon iconSettings)
         {
             float zoom = rect.width / 96;
-            GUIStyle labelStyle = new GUIStyle();
+            GUIStyle labelStyle = new GUIStyle ();
 
             string shortHand = iconSettings.folder.name;
 
-            if (!IsSideFolder(rect, guid, out _) && !FolderIconGUI.IsTreeView(rect))
+            if (!IsSideFolder (rect, guid, out _) && !FolderIconGUI.IsTreeView (rect))
             {
-                rect.width = Mathf.Clamp(rect.width, 35, 96) + 7;
+                rect.width = Mathf.Clamp (rect.width, 35, 96) + 7;
                 rect.x -= 5;
                 rect.y += rect.height - 13;
                 rect.height = 14;
@@ -27,19 +27,19 @@ namespace FolderIcons
                     fontSize = 10,
                 };
 
-                CheckOverflow(ref rect, ref shortHand);
+                CheckOverflow (ref rect, ref shortHand);
 
-                EditorGUI.DrawRect(rect, FolderIconConstants.BackgroundColour);
-                if (Selection.assetGUIDs.Contains(guid))
+                EditorGUI.DrawRect (rect, FolderIconConstants.BackgroundColour);
+                if (Selection.assetGUIDs.Contains (guid))
                 {
-                    DrawLabelSelection(rect, iconSettings);
+                    DrawLabelSelection (rect, iconSettings);
                 }
 
                 rect.x += 1.5f;
-                GUI.Label(rect, shortHand, labelStyle);
+                GUI.Label (rect, shortHand, labelStyle);
                 return;
             }
-            else if (IsSideFolder(rect, guid, out float indent))
+            else if (IsSideFolder (rect, guid, out float indent))
             {
                 rect.width += 100;
                 rect.x += 17;
@@ -52,23 +52,23 @@ namespace FolderIcons
                     fontSize = 12,
                 };
 
-                CheckOverflow(ref rect, ref shortHand);
+                CheckOverflow (ref rect, ref shortHand);
 
                 rect.x -= indent;
-                EditorGUI.DrawRect(rect, FolderIconConstants.TreeViewBackgroundColour);
+                EditorGUI.DrawRect (rect, FolderIconConstants.TreeViewBackgroundColour);
                 rect.x += indent;
-                if (Selection.assetGUIDs.Contains(guid))
+                if (Selection.assetGUIDs.Contains (guid))
                 {
                     rect.x -= indent + 18;
-                    DrawLabelSelection(rect, iconSettings);
+                    DrawLabelSelection (rect, iconSettings);
                     rect.x += indent + 18;
                 }
 
                 rect.x += 1f;
-                GUI.Label(rect, shortHand, labelStyle);
+                GUI.Label (rect, shortHand, labelStyle);
                 return;
             }
-            else if (FolderIconGUI.IsTreeView(rect))
+            else if (FolderIconGUI.IsTreeView (rect))
             {
                 rect.width += 100;
                 rect.x -= 13;
@@ -82,16 +82,16 @@ namespace FolderIcons
                     fontSize = 12,
                 };
 
-                CheckOverflow(ref rect, ref shortHand);
+                CheckOverflow (ref rect, ref shortHand);
 
-                EditorGUI.DrawRect(rect, FolderIconConstants.BackgroundColour);
-                if (Selection.assetGUIDs.Contains(guid))
+                EditorGUI.DrawRect (rect, FolderIconConstants.BackgroundColour);
+                if (Selection.assetGUIDs.Contains (guid))
                 {
-                    DrawLabelSelection(rect, iconSettings);
+                    DrawLabelSelection (rect, iconSettings);
                 }
 
                 rect.x += 34.5f;
-                GUI.Label(rect, shortHand, labelStyle);
+                GUI.Label (rect, shortHand, labelStyle);
                 return;
             }
         }
@@ -99,49 +99,59 @@ namespace FolderIcons
         private static void CheckOverflow(ref Rect rect, ref string shortHand)
         {
             int minLength = (int)rect.width / 5 - 5;
-            if (rect.width % 5 > 0) minLength++;
-            minLength = Mathf.Clamp(minLength, 1, int.MaxValue);
+            if (rect.width % 5 > 0)
+            {
+                minLength++;
+            }
 
-            if (shortHand.Length > minLength) shortHand = shortHand.Substring(0, minLength) + "...";
+            minLength = Mathf.Clamp (minLength, 1, int.MaxValue);
+
+            if (shortHand.Length > minLength)
+            {
+                shortHand = shortHand.Substring (0, minLength) + "...";
+            }
         }
 
         private static void DrawLabelSelection(Rect rect, FolderIconSettings.FolderIcon iconSettings)
         {
             Gradient usedGradient = iconSettings.selectionGradient;
-            if (FolderIconsReplacer.GetFolderIconSettings().useGlobalSelectionColor) usedGradient = FolderIconsReplacer.GetFolderIconSettings().globalSelectionGradient;
+            if (FolderIconsReplacer.GetFolderIconSettings ().useGlobalSelectionColor)
+            {
+                usedGradient = FolderIconsReplacer.GetFolderIconSettings ().globalSelectionGradient;
+            }
 
-            Texture2D drawTexture = new Texture2D(64, 1);
+            Texture2D drawTexture = new Texture2D (64, 1);
             for (int x = 0; x < drawTexture.width; x++)
             {
                 float time = x / (float)drawTexture.width;
-                Color tintColor = usedGradient.Evaluate(time);
+                Color tintColor = usedGradient.Evaluate (time);
                 // Debug.Log("tint pixel:" + tintColor);
-                drawTexture.SetPixel(x, 1, tintColor);
+                drawTexture.SetPixel (x, 1, tintColor);
             }
-            drawTexture.Apply();
+            drawTexture.Apply ();
 
-            GUI.DrawTexture(rect, drawTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 15);
+            GUI.DrawTexture (rect, drawTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 15);
         }
 
         public static Texture2D GradientToTexture(Gradient grad, int width = 32)
         {
-            var gradTex = new Texture2D(width, 1);
+            Texture2D gradTex = new Texture2D (width, 1);
             gradTex.filterMode = FilterMode.Bilinear;
             float inv = 1f / (width);
             for (int x = 0; x < width; x++)
             {
-                var t = x * inv;
-                Color col = grad.Evaluate(t);
-                gradTex.SetPixel(x, 1, col);
+                System.Single t = x * inv;
+                Color col = grad.Evaluate (t);
+                gradTex.SetPixel (x, 1, col);
             }
-            gradTex.Apply();
+            gradTex.Apply ();
             return gradTex;
         }
 
         public static bool IsSideFolder(Rect rect, string guid, out float indent)
         {
-            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-            string[] splits = assetPath.TrimStart(Application.dataPath.ToCharArray()).Split('/').Skip(1).ToArray();
+            string assetPath = AssetDatabase.GUIDToAssetPath (guid);
+            string[] splits = assetPath.TrimStart (Application.dataPath.ToCharArray ()).Split ('/').Skip (1).ToArray ();
             indent = (14 * splits.Length) + 30;
             return rect.x == indent;
         }
