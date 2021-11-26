@@ -1,5 +1,9 @@
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine;
+using System.Linq;
+using System.Reflection;
+using System;
+using System.IO;
 
 namespace FolderIcons
 {
@@ -17,23 +21,17 @@ namespace FolderIcons
         public static void DrawFolderPreview(Rect rect, Texture folder, Texture overlay)
         {
             if (folder == null && overlay == null)
-            {
                 return;
-            }
 
             if (folder != null)
-            {
-                GUI.DrawTexture (rect, folder, ScaleMode.ScaleToFit);
-            }
+                GUI.DrawTexture(rect, folder, ScaleMode.ScaleToFit);
 
             //Half size of overlay, and reposition to center
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
 
             if (overlay != null)
-            {
-                GUI.DrawTexture (rect, overlay, ScaleMode.ScaleToFit);
-            }
+                GUI.DrawTexture(rect, overlay, ScaleMode.ScaleToFit);
         }
 
         /// <summary>
@@ -42,15 +40,35 @@ namespace FolderIcons
         /// <param name="rect">Folder rect</param>
         /// <param name="folder">Folder texture</param>
         /// <param name="guid">The guid of the project fodler</param>
-        public static void DrawFolderTexture(Rect rect, Texture folder, string guid)
+        public static void DrawFolderTexture(Rect rect, string guid, FolderIconSettings.FolderIcon iconSettings)
         {
-            if (folder == null)
-            {
+            if (iconSettings.folderIcon == null)
                 return;
-            }
 
-            EditorGUI.DrawRect (rect, FolderIconConstants.BackgroundColour);
-            GUI.DrawTexture (rect, folder, ScaleMode.ScaleAndCrop);
+            if (Selection.assetGUIDs.Contains(guid))
+            {
+                if (FolderIconsReplacer.GetFolderIconSettings().showCustomFolder)
+                {
+                    GUI.DrawTexture(rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+                }
+                else
+                {
+                    Texture2D defaultTexture = Resources.Load("Folders/Folder_Default") as Texture2D;
+                    GUI.DrawTexture(rect, defaultTexture, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+                }
+            }
+            else
+            {
+                if (FolderIconsReplacer.GetFolderIconSettings().showCustomFolder)
+                {
+                    GUI.DrawTexture(rect, iconSettings.folderIcon, ScaleMode.ScaleAndCrop);
+                }
+                else
+                {
+                    Texture2D defaultTexture = Resources.Load("Folders/Folder_Default") as Texture2D;
+                    GUI.DrawTexture(rect, defaultTexture, ScaleMode.ScaleAndCrop);
+                }
+            }
         }
 
         /// <summary>
@@ -58,17 +76,22 @@ namespace FolderIcons
         /// </summary>
         /// <param name="rect">Original rect of the folder</param>
         /// <param name="overlay">Overlay Texture</param>
-        public static void DrawOverlayTexture(Rect rect, Texture overlay)
+        public static void DrawOverlayTexture(Rect rect, Texture overlay, string guid)
         {
-            if (overlay == null)
-            {
+            if (overlay == null || !FolderIconsReplacer.GetFolderIconSettings().showOverlay)
                 return;
-            }
 
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
 
-            GUI.DrawTexture (rect, overlay);
+            if (Selection.assetGUIDs.Contains(guid))
+            {
+                GUI.DrawTexture(rect, overlay, ScaleMode.ScaleAndCrop, true, 0, FolderIconConstants.SelectedColor, 0, 0);
+            }
+            else
+            {
+                GUI.DrawTexture(rect, overlay);
+            }
         }
 
         /// <summary>
@@ -78,6 +101,8 @@ namespace FolderIcons
         public static bool IsSideView(Rect rect)
         {
 #if UNITY_2019_3_OR_NEWER
+            // return rect.x != 14 && rect.x < 16;
+            // return rect.x == 44;
             return rect.x != 14;
 #else
             return rect.x != 13;
@@ -91,6 +116,7 @@ namespace FolderIcons
         public static bool IsTreeView(Rect rect)
         {
             return rect.width > rect.height;
+            // return rect.width == 16;
         }
     }
 }

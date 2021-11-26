@@ -1,5 +1,6 @@
 {
     "name": "FolderIconsEditor",
+    "rootNamespace": "",
     "references": [],
     "includePlatforms": [
         "Editor"
