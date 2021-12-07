@@ -27,6 +27,24 @@ namespace FolderIcons
             }
         }
 
+        public static void DrawCustomFolder(Rect rect, FolderIconSettings settings, FolderIconSettings.FolderIcon icon)
+        {
+            Texture2D folderIcon = icon.folderIcon;
+            Texture2D overlayIcon = icon.overlayIcon;
+
+            rect = GetFolderRect (rect);
+
+            if (settings.showCustomFolder && folderIcon)
+            {
+                DrawFolderTexture (rect, folderIcon);
+            }
+
+            if (settings.showOverlay && overlayIcon)
+            {
+                DrawOverlayTexture (rect, overlayIcon);
+            }
+        }
+
         /// <summary>
         /// Draw the folder texture.
         /// </summary>
@@ -85,6 +103,30 @@ namespace FolderIcons
             //Half size of overlay, and reposition to center
             rect.size *= 0.5f;
             rect.position += rect.size * 0.5f;
+
+            return rect;
+        }
+
+        private static Rect GetFolderRect(Rect rect)
+        {
+            bool isTreeView = rect.width > rect.height;
+            bool isSideView = IsSideView (rect);
+
+            // Vertical Folder View
+            if (isTreeView)
+            {
+                rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
+
+                //Add small offset for correct placement
+                if (!isSideView)
+                {
+                    rect.x += 3f;
+                }
+            }
+            else
+            {
+                rect.height -= 14f;
+            }
 
             return rect;
         }

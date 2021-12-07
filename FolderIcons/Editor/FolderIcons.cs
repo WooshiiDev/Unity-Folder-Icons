@@ -46,9 +46,9 @@ namespace FolderIcons
                 return;
             }
 
-            if (folderIcons.iconMap.TryGetValue(guid, out FolderIconSettings.FolderIcon folder))
+            if (folderIcons.iconMap.TryGetValue (guid, out FolderIconSettings.FolderIcon folder))
             {
-                DrawTextures (selectionRect, folder);
+                FolderIconGUI.DrawCustomFolder (selectionRect, folderIcons, folder);
             }
         }
 
@@ -72,45 +72,6 @@ namespace FolderIcons
             EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
 
             return settings;
-        }
-
-        private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon)
-        {
-            rect = CalculateTextureRect(rect);
-
-            if (folderIcons.showCustomFolder && icon.folderIcon)
-            {
-                FolderIconGUI.DrawFolderTexture (rect, icon.folderIcon);
-            }
-
-            if (folderIcons.showOverlay && icon.overlayIcon)
-            {
-                FolderIconGUI.DrawOverlayTexture (rect, icon.overlayIcon);
-            }
-        }
-
-        private static Rect CalculateTextureRect(Rect rect)
-        {
-            bool isTreeView = rect.width > rect.height;
-            bool isSideView = FolderIconGUI.IsSideView (rect);
-
-            // Vertical Folder View
-            if (isTreeView)
-            {
-                rect.width = rect.height = FolderIconConstants.MAX_TREE_HEIGHT;
-
-                //Add small offset for correct placement
-                if (!isSideView)
-                {
-                    rect.x += 3f;
-                }
-            }
-            else
-            {
-                rect.height -= 14f;
-            }
-
-            return rect;
         }
     }
 }
