@@ -41,18 +41,19 @@ namespace FolderIcons
             for (int i = 0; i < icons.Length; i++)
             {
                 FolderIcon icon = icons[i];
+                string guid = icon.GUID;
 
-                if (string.IsNullOrEmpty(icon.GUID))
+                if (string.IsNullOrEmpty(guid))
                 {
                     icon.SetGUID(AssetUtility.GetGUIDFromAsset(icon.folder));
                 }
 
-                if (iconMap.ContainsKey(icon.GUID))
+                if (iconMap.ContainsKey(guid))
                 {
                     continue;
                 }
 
-                iconMap.Add (icons[i].GUID, icons[i]);
+                iconMap.Add (guid, icons[i]);
             }
         }
 

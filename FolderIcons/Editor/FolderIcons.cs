@@ -52,6 +52,28 @@ namespace FolderIcons
             }
         }
 
+        private static FolderIconSettings GetOrCreateSettings()
+        {
+            string path = null;
+
+            // Make sure the key is still valid - no assuming that settings just 'exist'
+            string guidPref = FolderIconConstants.PREF_GUID;
+            if (EditorPrefs.HasKey (guidPref))
+            {
+                if (AssetUtility.TryGetAsset (EditorPrefs.GetString (guidPref), out path))
+                {
+                    return AssetDatabase.LoadAssetAtPath<FolderIconSettings> (path);
+                }
+            }
+
+            FolderIconSettings settings = AssetUtility.FindOrCreateScriptable<FolderIconSettings> (SETTINGS_TYPE_STRING, SETTINGS_NAME_STRING, FolderIconConstants.ASSET_DEFAULT_PATH);
+
+            path = AssetDatabase.GetAssetPath (settings);
+            EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
+
+            return settings;
+        }
+
         private static void DrawTextures(Rect rect, FolderIconSettings.FolderIcon icon)
         {
             rect = CalculateTextureRect(rect);
@@ -65,28 +87,6 @@ namespace FolderIcons
             {
                 FolderIconGUI.DrawOverlayTexture (rect, icon.overlayIcon);
             }
-        }
-
-        private static FolderIconSettings GetOrCreateSettings()
-        {
-            string path = null;
-
-            // Make sure the key is still valid - no assuming that settings just 'exist'
-            string guidPref = FolderIconConstants.PREF_GUID;
-            if (EditorPrefs.HasKey (guidPref))
-            {
-                if (AssetUtility.TryGetAsset(EditorPrefs.GetString (guidPref), out path))
-                {
-                    return AssetDatabase.LoadAssetAtPath<FolderIconSettings> (path);
-                }
-            }
-
-            FolderIconSettings settings = AssetUtility.FindOrCreateScriptable<FolderIconSettings> (SETTINGS_TYPE_STRING, SETTINGS_NAME_STRING, FolderIconConstants.ASSET_DEFAULT_PATH);
-
-            path = AssetDatabase.GetAssetPath (settings);
-            EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
-
-            return settings;
         }
 
         private static Rect CalculateTextureRect(Rect rect)

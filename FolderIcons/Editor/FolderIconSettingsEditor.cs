@@ -96,8 +96,6 @@ namespace FolderIcons
                 previewStyle = new GUIStyle (EditorStyles.label)
                 {
                     fixedHeight = 64,
-                    //fixedWidth = 64,
-                    //stretchWidth = false,
                     alignment = TextAnchor.MiddleCenter
                 };
 
@@ -445,10 +443,6 @@ namespace FolderIcons
 
             AssetDatabase.ImportAsset (path);
             AssetDatabase.Refresh ();
-
-            //Texture2D textureAsset = AssetDatabase.LoadAssetAtPath<Texture2D> (path);
-            //textureAsset.alphaIsTransparency = true;
-            //textureAsset.Apply ();
         }
 
         /// <summary>

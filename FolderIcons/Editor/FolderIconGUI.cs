@@ -16,23 +16,14 @@ namespace FolderIcons
         /// <param name="overlay">The overlay texture.</param>
         public static void DrawFolderPreview(Rect rect, Texture folder, Texture overlay)
         {
-            if (folder == null && overlay == null)
-            {
-                return;
-            }
-
             if (folder != null)
             {
                 GUI.DrawTexture (rect, folder, ScaleMode.ScaleToFit);
             }
        
             if (overlay != null)
-            {     
-                //Half size of overlay, and reposition to center
-                rect.size *= 0.5f;
-                rect.position += rect.size * 0.5f;
-
-                GUI.DrawTexture (rect, overlay, ScaleMode.ScaleToFit);
+            {
+                GUI.DrawTexture (GetOverlayRect(rect), overlay, ScaleMode.ScaleToFit);
             }
         }
 
@@ -64,10 +55,7 @@ namespace FolderIcons
                 return;
             }
 
-            rect.size *= 0.5f;
-            rect.position += rect.size * 0.5f;
-
-            GUI.DrawTexture (rect, overlay);
+            GUI.DrawTexture (GetOverlayRect(rect), overlay);
         }
 
         /// <summary>
@@ -90,6 +78,15 @@ namespace FolderIcons
         public static bool IsTreeView(Rect rect)
         {
             return rect.width > rect.height;
+        }
+
+        private static Rect GetOverlayRect(Rect rect)
+        {
+            //Half size of overlay, and reposition to center
+            rect.size *= 0.5f;
+            rect.position += rect.size * 0.5f;
+
+            return rect;
         }
     }
 }
