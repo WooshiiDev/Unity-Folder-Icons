@@ -9,7 +9,7 @@ namespace FolderIcons
     public class FolderIconSettings : ScriptableObject
     {
         [Serializable]
-        public class FolderIcon
+        public class FolderData
         {
             [SerializeField][HideInInspector]
             private string guid;
@@ -30,17 +30,17 @@ namespace FolderIcons
         public bool showOverlay = true;
         public bool showCustomFolder = true;
 
-        public FolderIcon[] icons = new FolderIcon[0];
+        public FolderData[] icons = new FolderData[0];
 
-        public Dictionary<string, FolderIcon> iconMap;
+        public Dictionary<string, FolderData> iconMap;
 
         public void OnInitalize()
         {
-            iconMap = new Dictionary<string, FolderIcon> ();
+            iconMap = new Dictionary<string, FolderData> ();
 
             for (int i = 0; i < icons.Length; i++)
             {
-                FolderIcon icon = icons[i];
+                FolderData icon = icons[i];
                 string guid = icon.GUID;
 
                 if (string.IsNullOrEmpty(guid))
@@ -69,7 +69,7 @@ namespace FolderIcons
                 return;
             }
 
-            if (iconMap.TryGetValue(oldGUID, out FolderIcon icon))
+            if (iconMap.TryGetValue(oldGUID, out FolderData icon))
             {
                 iconMap.Add (newGUID, icon);
                 iconMap.Remove (oldGUID);

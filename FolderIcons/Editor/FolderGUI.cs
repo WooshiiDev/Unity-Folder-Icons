@@ -6,7 +6,7 @@ namespace FolderIcons
     /// <summary>
     /// GUI Methods for Folder Icons.
     /// </summary>
-    public static class FolderIconGUI
+    public static class FolderGUI
     {
         /// <summary>
         /// Draw the folder preview.
@@ -27,7 +27,13 @@ namespace FolderIcons
             }
         }
 
-        public static void DrawCustomFolder(Rect rect, FolderIconSettings settings, FolderIconSettings.FolderIcon icon)
+        /// <summary>
+        /// Draw the folder and its overlay
+        /// </summary>
+        /// <param name="rect">The original folder rect.</param>
+        /// <param name="settings">The global settings.</param>
+        /// <param name="icon">The folder icon data.</param>
+        public static void DrawCustomFolder(Rect rect, FolderIconSettings settings, FolderIconSettings.FolderData icon)
         {
             Texture2D folderIcon = icon.folderIcon;
             Texture2D overlayIcon = icon.overlayIcon;

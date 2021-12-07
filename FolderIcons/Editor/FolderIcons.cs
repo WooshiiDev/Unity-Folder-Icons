@@ -46,9 +46,9 @@ namespace FolderIcons
                 return;
             }
 
-            if (folderIcons.iconMap.TryGetValue (guid, out FolderIconSettings.FolderIcon folder))
+            if (folderIcons.iconMap.TryGetValue (guid, out FolderIconSettings.FolderData folder))
             {
-                FolderIconGUI.DrawCustomFolder (selectionRect, folderIcons, folder);
+                FolderGUI.DrawCustomFolder (selectionRect, folderIcons, folder);
             }
         }
 
