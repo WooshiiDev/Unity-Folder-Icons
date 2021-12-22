@@ -33,7 +33,7 @@ namespace FolderIcons
         /// <param name="rect">The original folder rect.</param>
         /// <param name="settings">The global settings.</param>
         /// <param name="icon">The folder icon data.</param>
-        public static void DrawCustomFolder(Rect rect, FolderIconSettings settings, FolderIconSettings.FolderData icon)
+        public static void DrawCustomFolder(Rect rect, Object folderAsset, FolderIconSettings settings, FolderIconSettings.FolderData icon)
         {
             Texture2D folderIcon = icon.folderIcon;
             Texture2D overlayIcon = icon.overlayIcon;
@@ -42,7 +42,7 @@ namespace FolderIcons
 
             if (settings.showCustomFolder && folderIcon)
             {
-                DrawFolderTexture (rect, folderIcon);
+                DrawFolderTexture (rect, folderIcon, folderAsset);
             }
 
             if (settings.showOverlay && overlayIcon)
@@ -56,15 +56,14 @@ namespace FolderIcons
         /// </summary>
         /// <param name="rect">The rect for the folder texture.</param>
         /// <param name="folder">The texture to draw.</param>
-        public static void DrawFolderTexture(Rect rect, Texture folder)
+        public static void DrawFolderTexture(Rect rect, Texture folder, Object folderAsset)
         {
             if (folder == null)
             {
                 return;
             }
 
-            EditorGUI.DrawRect (rect, FolderIconConstants.BackgroundColour);
-            GUI.DrawTexture (rect, folder, ScaleMode.ScaleAndCrop);
+            GUI.DrawTexture (rect, folder, ScaleMode.ScaleToFit);
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace FolderIcons
 
         private static Rect GetFolderRect(Rect rect)
         {
-            bool isTreeView = rect.width > rect.height;
+            bool isTreeView = IsTreeView(rect);
             bool isSideView = IsSideView (rect);
 
             // Vertical Folder View

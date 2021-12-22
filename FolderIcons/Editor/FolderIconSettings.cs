@@ -46,6 +46,7 @@ namespace FolderIcons
                 if (string.IsNullOrEmpty(guid))
                 {
                     icon.SetGUID(AssetUtility.GetGUIDFromAsset(icon.folder));
+                    guid = icon.GUID;
                 }
 
                 if (iconMap.ContainsKey(guid))
@@ -59,12 +60,7 @@ namespace FolderIcons
 
         public void UpdateGUIDMap(string oldGUID, string newGUID)
         {
-            if (oldGUID == newGUID)
-            {
-                return;
-            }
-
-            if (iconMap.ContainsKey(newGUID))
+            if (oldGUID == newGUID || iconMap.ContainsKey (newGUID))
             {
                 return;
             }

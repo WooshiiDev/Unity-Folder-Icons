@@ -11,13 +11,12 @@ namespace FolderIcons
 
         // References
         private static Object[] allFolderIcons;
-        private static FolderIconSettings folderIcons;
+        private static FolderIconSettings settings;
 
         static FolderIcons()
         {
             // Find scriptable instance or create one
-            folderIcons = GetOrCreateSettings ();
-            folderIcons?.OnInitalize ();
+            FetchSettings ();
 
             // Setup callback
             EditorApplication.projectWindowItemOnGUI -= OnFolderGUI;
@@ -26,15 +25,13 @@ namespace FolderIcons
 
         private static void OnFolderGUI(string guid, Rect selectionRect)
         {
-            if (folderIcons == null)
+            if (settings == null)
             {
-                folderIcons = GetOrCreateSettings ();
-                folderIcons.OnInitalize ();
-
+                FetchSettings ();
                 return;
             }
 
-            if (!folderIcons.showCustomFolder && !folderIcons.showOverlay)
+            if (!settings.showCustomFolder && !settings.showOverlay)
             {
                 return;
             }
@@ -46,9 +43,9 @@ namespace FolderIcons
                 return;
             }
 
-            if (folderIcons.iconMap.TryGetValue (guid, out FolderIconSettings.FolderData folder))
+            if (settings.iconMap.TryGetValue (guid, out FolderIconSettings.FolderData folder))
             {
-                FolderGUI.DrawCustomFolder (selectionRect, folderIcons, folder);
+                FolderGUI.DrawCustomFolder (selectionRect, folderAsset, settings, folder);
             }
         }
 
@@ -72,6 +69,12 @@ namespace FolderIcons
             EditorPrefs.SetString (guidPref, AssetDatabase.AssetPathToGUID (path));
 
             return settings;
+        }
+
+        private static void FetchSettings()
+        {
+            settings = GetOrCreateSettings ();
+            settings.OnInitalize ();
         }
     }
 }

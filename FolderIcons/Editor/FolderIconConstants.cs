@@ -46,8 +46,18 @@ namespace FolderIcons
 
         public static readonly Color SelectedColor = new Color (0.235f, 0.360f, 0.580f);
 
-        public static Color BackgroundColour = EditorGUIUtility.isProSkin
+        public static readonly Color SkinColor = EditorGUIUtility.isProSkin
           ? new Color32 (51, 51, 51, 255)
           : new Color32 (190, 190, 190, 255);
+
+        public static Color GetBackgroundColor(Object instance)
+        {
+            if (Selection.Contains(instance))
+            {
+                return SelectedColor;
+            }
+
+            return SkinColor;
+        }
     }
 }
