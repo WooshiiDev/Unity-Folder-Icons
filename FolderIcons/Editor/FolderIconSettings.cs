@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -58,18 +58,37 @@ namespace FolderIcons
             }
         }
 
-        public void UpdateGUIDMap(string oldGUID, string newGUID)
+        public void UpdateGUIDMap(string oldGUID, string newGUID, int folderIndex)
         {
-            if (oldGUID == newGUID || iconMap.ContainsKey (newGUID))
+            if (oldGUID == newGUID)
             {
+                if (HasGUID (newGUID))
+                {
+                    iconMap.Remove (oldGUID);
+                }
+
                 return;
             }
 
-            if (iconMap.TryGetValue(oldGUID, out FolderData icon))
+            bool isNewFolderData = string.IsNullOrEmpty (oldGUID);
+
+            if (!isNewFolderData)
             {
-                iconMap.Add (newGUID, icon);
-                iconMap.Remove (oldGUID);
+                if (iconMap.TryGetValue (oldGUID, out FolderData icon))
+                {
+                    iconMap.Add (newGUID, icon);
+                    iconMap.Remove (oldGUID);
+                }
             }
+            else
+            {
+                iconMap.Add (newGUID, icons[folderIndex]);
+            }
+        }
+
+        public bool HasGUID(string guid)
+        {
+            return iconMap.ContainsKey (guid);
         }
     }
 }

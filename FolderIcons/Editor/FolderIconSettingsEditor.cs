@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -169,29 +169,32 @@ namespace FolderIcons
                     string oldGUID = guidProp.stringValue;
                     string newGUID = AssetUtility.GetGUIDFromAsset (folderProp.objectReferenceValue);
 
-                    if (oldGUID != newGUID)
-                    {
-                        if (!settings.iconMap.ContainsKey (newGUID))
-                        {
-                            guidProp.stringValue = newGUID;
+                    settings.UpdateGUIDMap (oldGUID, newGUID, index);
+                    EditorApplication.RepaintProjectWindow ();
 
-                            if (!string.IsNullOrEmpty (oldGUID))
-                            {
-                                settings.UpdateGUIDMap (oldGUID, newGUID);
-                            }
-                            else
-                            {
-                                settings.iconMap.Add (newGUID, settings.icons[index]);
-                            }
-                        }
-                        else
-                        {
-                            guidProp.stringValue = null;
-                            settings.iconMap.Remove (oldGUID);
-                        }
+                    //if (oldGUID != newGUID)
+                    //{
+                    //    if (!settings.HasGUID (newGUID))
+                    //    {
+                    //        guidProp.stringValue = newGUID;
 
-                        EditorApplication.RepaintProjectWindow ();
-                    }
+                    //        if (!string.IsNullOrEmpty (oldGUID))
+                    //        {
+                    //            settings.UpdateGUIDMap (oldGUID, newGUID, index);
+                    //        }
+                    //        else
+                    //        {
+                    //            settings.iconMap.Add (newGUID, settings.icons[index]);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        guidProp.stringValue = null;
+                    //        settings.iconMap.Remove (oldGUID);
+                    //    }
+
+                    //    EditorApplication.RepaintProjectWindow ();
+                    //}
                 }
             }
 
