@@ -50,6 +50,13 @@ namespace FolderIcons
           ? new Color32 (51, 51, 51, 255)
           : new Color32 (190, 190, 190, 255);
 
+        // Textures
+
+        public const string TEX_FOLDER_CLOSED = "Folder Icon";
+        public const string TEX_FOLDER_OPEN = "FolderEmpty Icon";
+
+        // Methods
+
         public static Color GetBackgroundColor(Object instance)
         {
             if (Selection.Contains(instance))
