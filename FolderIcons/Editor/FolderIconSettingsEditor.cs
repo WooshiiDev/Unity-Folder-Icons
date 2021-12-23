@@ -171,30 +171,6 @@ namespace FolderIcons
 
                     settings.UpdateGUIDMap (oldGUID, newGUID, index);
                     EditorApplication.RepaintProjectWindow ();
-
-                    //if (oldGUID != newGUID)
-                    //{
-                    //    if (!settings.HasGUID (newGUID))
-                    //    {
-                    //        guidProp.stringValue = newGUID;
-
-                    //        if (!string.IsNullOrEmpty (oldGUID))
-                    //        {
-                    //            settings.UpdateGUIDMap (oldGUID, newGUID, index);
-                    //        }
-                    //        else
-                    //        {
-                    //            settings.iconMap.Add (newGUID, settings.icons[index]);
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        guidProp.stringValue = null;
-                    //        settings.iconMap.Remove (oldGUID);
-                    //    }
-
-                    //    EditorApplication.RepaintProjectWindow ();
-                    //}
                 }
             }
 
